@@ -5,11 +5,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Mitarbeiter {
@@ -20,8 +23,10 @@ public class Mitarbeiter {
     private String name;
     private String benutzername;
     private Date geburtsDatum;
-    @Embedded
+    
+    @ManyToMany(cascade=CascadeType.MERGE, fetch=FetchType.EAGER)
     private Set<Privileg> nutzerprivilegien = new HashSet<Privileg>();
+
 
 
     

@@ -21,10 +21,7 @@ public class SampleData implements ApplicationListener<ContextRefreshedEvent> {
 	@Autowired
     private ZutatRepository zutatRepository;
 	@Autowired
-	private MindestbestandsaenderungRepository mindestbestandsaenderungRepository;
-	@Autowired
-	private BestandsaenderungRepository bestandsaenderungRepository;
-	
+	private PrivilegRepository privilegRepository;
 	
     @Override
     public void onApplicationEvent(ContextRefreshedEvent arg0) {
@@ -36,37 +33,66 @@ public class SampleData implements ApplicationListener<ContextRefreshedEvent> {
     }
     
     public void createData(){
+    	Privileg bestaendeAendern = new Privileg("Bestaende veraendern");
+    	Privileg mbSetzen = new Privileg("MB setzen");
+    	Privileg mbEinsehen = new Privileg("MB einsehen");
+    	privilegRepository.save(bestaendeAendern);
+    	privilegRepository.save(mbSetzen);
+    	privilegRepository.save(mbEinsehen);
+    	
+    	
+    	
     	
     	Set<Privileg> mitarbeiter = new HashSet<Privileg>();
-    	mitarbeiter.add(new Privileg("Bestände verändern"));
+    	mitarbeiter.add(bestaendeAendern);
+    	privilegRepository.save(mitarbeiter);
     	
     	Set<Privileg> chefkoch = new HashSet<Privileg>();
-    	chefkoch.add(new Privileg("MB setzen"));
-    	chefkoch.add(new Privileg("Bestände verändern"));
+    	chefkoch.add(mbSetzen);
+    	chefkoch.add(bestaendeAendern);
+    	privilegRepository.save(chefkoch);
     	
     	Set<Privileg> manager = new HashSet<Privileg>();
-    	manager.add(new Privileg("MB setzen"));
-    	manager.add(new Privileg("Bestände verändern"));
-    	manager.add(new Privileg("MB einsehen"));
+    	manager.add(mbSetzen);
+    	manager.add(bestaendeAendern);
+    	manager.add(mbEinsehen);
+    	privilegRepository.save(manager);
     	
     	mitarbeiterRepository.save(new Mitarbeiter("Max","Mustermann","maxmu", new Date(),manager));
     	mitarbeiterRepository.save(new Mitarbeiter("Chef","Koch","chef", new Date(),chefkoch));
     	mitarbeiterRepository.save(new Mitarbeiter("Horst","Heinrich","hohe",new Date(),mitarbeiter));
     	
-    	zutatRepository.save(new ZutatFactory().createZutat("Kartoffeln", 1,2,"Nachtschattengewächse"));
-    	zutatRepository.save(new ZutatFactory().createZutat("Tomaten", 5000, 200, "Nachtschattengewächse"));
-    	zutatRepository.save(new ZutatFactory().createZutat("Karotten", 400, 100, "Gemüse"));
-    	zutatRepository.save(new ZutatFactory().createZutat("Rindersteak", 300, 80, "Fleisch"));
-    	zutatRepository.save(new ZutatFactory().createZutat("Riesling", 70, 50, "Weißwein"));
     	
     	
-    	Mindestbestandsaenderung mb1=	new Mindestbestandsaenderung(new Date(), 2000, zutatRepository.findOneByBezeichnung("Kartoffel"));
-    	mindestbestandsaenderungRepository.save(mb1);
+    	Saisonverfuegbarkeit ganzesjahr = new Saisonverfuegbarkeit(true,true,true,true,true,true,true,true,true,true,true,true);
     	
-    	Bestandsaenderung b1 = new Bestandsaenderung(new Date(),50, zutatRepository.findOneByBezeichnung("Kartoffel"));
-    	bestandsaenderungRepository.save(b1);
+    	Zutat kartoffeln = new Zutat("Kartoffeln", "Nachtschattengewaechse",ganzesjahr);
+    	Bestand kartoffelBestand = new BestandFactory().createBestand(kartoffeln, 1, 2, "kg");
+    	kartoffeln.setBestand(kartoffelBestand);
     	
-    	System.out.println(mitarbeiterRepository.findByVorname("Max"));
+    	Zutat tomaten = new Zutat("Tomaten", "Nachtschattengewaechse",ganzesjahr);
+    	Bestand tomatenBestand = new BestandFactory().createBestand(tomaten, 30, 25, "kg");
+    	tomaten.setBestand(tomatenBestand);
+    	
+    	Zutat karotten = new Zutat("Karotten", "Gemuese",ganzesjahr);
+    	Bestand karottenBestand = new BestandFactory().createBestand(karotten, 400, 100, "kg");
+    	karotten.setBestand(karottenBestand);
+    	
+    	Zutat rindersteak = new Zutat("Rindersteak", "Nachtschattengewaechse",ganzesjahr);
+    	Bestand rindersteakBestand = new BestandFactory().createBestand(rindersteak, 300, 80, "kg");
+    	rindersteak.setBestand(rindersteakBestand);
+    	
+    	Zutat riesling = new Zutat("Riesling", "Weisswein",ganzesjahr);
+    	Bestand rieslingBestand = new BestandFactory().createBestand(riesling, 70, 50, "flaschen");
+    	riesling.setBestand(rieslingBestand);
+    	
+    	zutatRepository.save(kartoffeln);
+    	zutatRepository.save(tomaten);
+    	zutatRepository.save(karotten);
+    	zutatRepository.save(rindersteak);
+    	zutatRepository.save(riesling);
+    	
+       	System.out.println(mitarbeiterRepository.findByVorname("Max"));
     		
     }
     

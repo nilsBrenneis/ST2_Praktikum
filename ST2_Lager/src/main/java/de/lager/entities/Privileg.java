@@ -5,13 +5,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-@Embeddable
+@Entity
 public class Privileg {
-	 private String bezeichnung;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long privileg_id;
+    private String bezeichnung;
 
     
     
@@ -19,17 +25,21 @@ public class Privileg {
     	
     }
     
-    
-    public Privileg(String bezeichnung) {
+    public Privileg(String bezeichnung){
     	this.bezeichnung=bezeichnung;
     }
     
     public Privileg( String bezeichnung, Set<Mitarbeiter> privilegienInhaber) {
-		super();
+		
 		this.bezeichnung = bezeichnung;
 		this.privilegienInhaber = privilegienInhaber;
 	}
-    
+
+
+	public long getId() {
+		return privileg_id;
+	}
+
 	public String getBezeichnung() {
 		return bezeichnung;
 	}

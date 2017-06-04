@@ -17,9 +17,9 @@ public class Zutat {
     private String bezeichnung;
     @OneToOne(cascade=CascadeType.ALL)
     private Bestand bestand;
-    @Embedded 
-    private Zutatenkategorie zutatenkategorie;
-    
+    private String zutatenkategorie;
+    @Embedded
+    private Saisonverfuegbarkeit saisonverfuegbarkeit;
     
     protected Zutat() {
     	
@@ -31,11 +31,28 @@ public class Zutat {
 		this.bestand = bestand;
 	}
 
-	
-	public Zutat(String bezeichnung, Bestand bestand,Zutatenkategorie kategorie) {
+	public Zutat(String bezeichnung,String kategorie) {
+		this.bezeichnung = bezeichnung;
+		this.zutatenkategorie=kategorie;
+	}
+		
+	public Zutat(String bezeichnung,String kategorie, Bestand bestand) {
 		this.bezeichnung = bezeichnung;
 		this.bestand = bestand;
 		this.zutatenkategorie=kategorie;
+	}
+	
+	public Zutat(String bezeichnung,String kategorie, Saisonverfuegbarkeit saisonverfuegbarkeit) {
+		this.bezeichnung = bezeichnung;
+		this.saisonverfuegbarkeit = saisonverfuegbarkeit;
+		this.zutatenkategorie=kategorie;
+	}
+	
+	public Zutat(String bezeichnung,String kategorie, Saisonverfuegbarkeit saisonverfuegbarkeit, Bestand bestand) {
+		this.bezeichnung = bezeichnung;
+		this.bestand = bestand;
+		this.zutatenkategorie=kategorie;
+		this.saisonverfuegbarkeit = saisonverfuegbarkeit;
 	}
 	
 	
@@ -57,12 +74,20 @@ public class Zutat {
 	public void setBestand(Bestand bestand) {
 		this.bestand = bestand;
 	}
-	public Zutatenkategorie getZutatenkategorie() {
+	public String getZutatenkategorie() {
 		return zutatenkategorie;
 	}
-	public void setZutatenkategorie(Zutatenkategorie zutatenkategorie) {
+	public void setZutatenkategorie(String zutatenkategorie) {
 		this.zutatenkategorie = zutatenkategorie;
 	}
+	
+	public void setSaisonverfuegbarkeit(Saisonverfuegbarkeit saisonverfuegbarkeit){
+		this.saisonverfuegbarkeit = saisonverfuegbarkeit;
+	}
 
+	public Saisonverfuegbarkeit getSaisonverfuegbarkeit(){
+		return saisonverfuegbarkeit;
+	}
+	
 	
 }

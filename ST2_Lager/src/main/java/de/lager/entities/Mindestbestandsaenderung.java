@@ -16,7 +16,7 @@ public class Mindestbestandsaenderung {
     private Date datum;
     private double mindestbestand;
     @ManyToOne
-    private Zutat zutat;
+    private Bestand	bestand;
     
     
     
@@ -25,11 +25,11 @@ public class Mindestbestandsaenderung {
     }
     
     
-	public Mindestbestandsaenderung(Date datum, double mindestbestand, Zutat zutat) {
+	public Mindestbestandsaenderung(Date datum, double mindestbestand,Bestand bestand) {
 		super();
 		this.datum = datum;
 		this.mindestbestand = mindestbestand;
-		this.zutat = zutat;
+		this.bestand = bestand;
 	}
 
 
@@ -51,10 +51,10 @@ public class Mindestbestandsaenderung {
 	public void setMindestbestand(double mindestbestand) {
 		this.mindestbestand = mindestbestand;
 	}
-	public Zutat getZutat() {
-		return zutat;
+	public Bestand getBestand() {
+		return bestand;
 	}
-	public void setZutat(Zutat zutat) {
-		this.zutat = zutat;
+	public void setBestand(Bestand bestand) {
+		this.bestand = bestand;
 	}
 }

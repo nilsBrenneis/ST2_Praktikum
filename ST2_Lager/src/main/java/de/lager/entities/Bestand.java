@@ -14,7 +14,6 @@ public class Bestand {
     private long bestand_id;
     private double menge;
     private double mindestbestand;
-   	@Embedded
     private Mengeneinheit mengeneinheit;
    	@OneToOne(mappedBy="bestand")
    	private Zutat zutat;
@@ -32,13 +31,15 @@ public class Bestand {
 	}
 	
 	
-	public Bestand(double menge, double mindestbestand, Mengeneinheit mengeneinheit) {
+	public Bestand(double menge, double mindestbestand, String mengeneinheit,Zutat zutat) {
 		this.menge = menge;
 		this.mindestbestand = mindestbestand;
-		this.mengeneinheit=mengeneinheit;
+		this.mengeneinheit=Mengeneinheit.valueOf(mengeneinheit.toLowerCase());
 	}
 	
-
+	public enum Mengeneinheit {
+		l,kg,ml,g,flaschen,stueck, tonne
+	}
 
 
 	public long getId() {
@@ -74,3 +75,4 @@ public class Bestand {
 		this.zutat=zutat;
 	}
 }
+

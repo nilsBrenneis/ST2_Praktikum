@@ -16,18 +16,18 @@ public class Bestandsaenderung {
     private Date datum;
     private double mengenaenderung;
     @ManyToOne
-    private Zutat zutat;
-    
+    Bestand bestand;
     
     protected Bestandsaenderung() {
     	
     }
     
     
-	public Bestandsaenderung( Date datum, double mengenaenderung, Zutat zutat) {
+	public Bestandsaenderung( Date datum, double mengenaenderung, Bestand bestand) {
 		this.datum = datum;
 		this.mengenaenderung = mengenaenderung;
-		this.zutat = zutat;
+		this.bestand=bestand;
+		
 	}
 
 
@@ -49,10 +49,13 @@ public class Bestandsaenderung {
 	public void setMengenaenderung(double mengenaenderung) {
 		this.mengenaenderung = mengenaenderung;
 	}
-	public Zutat getZutat() {
-		return zutat;
+	
+	public Bestand getBestand(){
+		return bestand;
 	}
-	public void setZutat(Zutat zutat) {
-		this.zutat = zutat;
+	
+	public void setBestand(Bestand bestand){
+		this.bestand= bestand;
 	}
+	
 }
