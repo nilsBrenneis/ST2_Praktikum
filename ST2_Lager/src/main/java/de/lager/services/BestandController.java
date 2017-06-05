@@ -17,18 +17,18 @@ import de.lager.factories.BestandFactory;
 import de.lager.repositories.ZutatRepository;
 
 @RestController
-public class KundeController {
+public class BestandController {
  
     @Autowired
     private ZutatRepository zutatRepository;
     
     /**
-     * Alle Kunden auslesen
+     * Liste des kompletten Besetands
      * @return
      */
     @RequestMapping(path = "/kunden", method = RequestMethod.GET)
-    public List<Kunde> getAllKunden() {
-		return (List<Kunde>) kundeRepository.findAll();
+    public List<Zutat> getAllZutaten() {
+		return (List<Zutat>) zutatRepository.findAll();
     }
 	
     /**
@@ -61,10 +61,10 @@ public class KundeController {
      * @return
      */
     @RequestMapping(value = "/bestand/zutat/neu", method = RequestMethod.POST)
-    public ResponseEntity <?> persistPerson(
-    		@RequestParam("name") String name, @RequestParam("vorname") String vorname) 
+    public ResponseEntity <?> persistZutat(
+    		@RequestParam("name") String name, @RequestParam("bestand") String bestand, @RequestParam("mindestbestand") String mindestbestand, @RequestParam("verfuegbarkeit") String verfuegbarkeit) 
     {
-    	Zutat z = zutatRepository.save(new BestandFactory().createBestand());
+    	Zutat z = zutatRepository.save(new BestandFactory().createBestand("x", 2.0, 5.0, "Kilogramm"));
     	URI location = ServletUriComponentsBuilder.fromCurrentRequestUri()
     					.path("/{id}").buildAndExpand( z.getId() ).toUri();
 		return ResponseEntity.created( location ).body( z );
