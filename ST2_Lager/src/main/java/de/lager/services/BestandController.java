@@ -30,7 +30,7 @@ public class BestandController {
      * Liste des kompletten Besetands
      * @return
      */
-    @RequestMapping(path = "/kunden", method = RequestMethod.GET)
+    @RequestMapping(path = "/bestand", method = RequestMethod.GET)
     public List<Zutat> getAllZutaten() {
 		return (List<Zutat>) zutatRepository.findAll();
     }
@@ -68,7 +68,7 @@ public class BestandController {
      * Bestand einzelner Zutat ändern
      * @return
      */
-    @RequestMapping(path="/zutat/{id}", method = RequestMethod.PUT)
+    @RequestMapping(path="/bestand/zutat/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> setZutatById(@RequestParam Long id,  @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) {
