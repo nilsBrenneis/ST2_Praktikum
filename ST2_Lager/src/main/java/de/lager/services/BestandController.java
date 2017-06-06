@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import de.lager.entities.Bestand;
 import de.lager.entities.Zutat;
 import de.lager.factories.BestandFactory;
+import de.lager.repositories.BestandRepository;
 import de.lager.repositories.ZutatRepository;
 
 @RestController
@@ -21,6 +23,8 @@ public class BestandController {
  
     @Autowired
     private ZutatRepository zutatRepository;
+    @Autowired 
+    private BestandRepository bestandRepository;
     
     /**
      * Liste des kompletten Besetands
@@ -43,6 +47,43 @@ public class BestandController {
 	}
 
     /**
+     * Zutat ändern
+     * @return
+     */
+    @RequestMapping(path="/zutat/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> setZutatById(@RequestParam Long id,  @RequestParam("bezeichnung") String bezeichnung, @RequestParam("kategorie") String kategorie) {
+		Zutat z = zutatRepository.findOne(id);
+		if (z == null) {
+			return ResponseEntity.notFound().build();
+		}
+		else {
+			z.setBezeichnung(bezeichnung);
+			z.setZutatenkategorie(kategorie);
+			zutatRepository.save(z);
+			return ResponseEntity.ok().body(z);
+		}
+	}
+    
+    /**
+     * Bestand einzelner Zutat ändern
+     * @return
+     */
+    @RequestMapping(path="/zutat/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> setZutatById(@RequestParam Long id,  @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand) {
+		Zutat z = zutatRepository.findOne(id);
+		if (z == null) {
+			return ResponseEntity.notFound().build();
+		}
+		else {
+			Bestand b = z.getBestand();
+			b.setMenge(menge);
+			b.setMindestbestand(mindestbestand);
+			bestandRepository.save(b);
+			return ResponseEntity.ok().body(z);
+		}
+	}
+    
+    /**
      * Zutat löschen
      * @return
      */
@@ -62,9 +103,13 @@ public class BestandController {
      */
     @RequestMapping(value = "/bestand/zutat/neu", method = RequestMethod.POST)
     public ResponseEntity <?> persistZutat(
-    		@RequestParam("name") String name, @RequestParam("bestand") String bestand, @RequestParam("mindestbestand") String mindestbestand, @RequestParam("verfuegbarkeit") String verfuegbarkeit) 
+    		@RequestParam("name") String name, @RequestParam("kategorie") String kategorie, @RequestParam("bestand") String bestand, @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand, @RequestParam("einheit") String einheit) 
     {
-    	Zutat z = zutatRepository.save(new BestandFactory().createBestand("x", 2.0, 5.0, "Kilogramm"));
+    	Zutat z = new Zutat(name, kategorie);
+    	Bestand b = new BestandFactory().createBestand(z, menge, mindestbestand, einheit);
+    	z.setBestand(b);
+    	zutatRepository.save(z);
+    	
     	URI location = ServletUriComponentsBuilder.fromCurrentRequestUri()
     					.path("/{id}").buildAndExpand( z.getId() ).toUri();
 		return ResponseEntity.created( location ).body( z );
