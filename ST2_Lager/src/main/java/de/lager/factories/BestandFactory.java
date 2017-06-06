@@ -19,6 +19,7 @@ public class BestandFactory {
 		Bestandsaenderung bestandsaenderung = new Bestandsaenderung(new Date(), menge,bestand);
 		Mindestbestandsaenderung mindestbestandsaenderung = new Mindestbestandsaenderung(new Date(), mindestbestand,bestand);
 		
+		
 		return bestand;
 	}
 	
