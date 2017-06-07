@@ -51,14 +51,14 @@ public class BestandController {
      * @return
      */
     @RequestMapping(path="/zutat/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> setZutatById(@RequestParam Long id,  @RequestParam("bezeichnung") String bezeichnung, @RequestParam("kategorie") String kategorie) {
+	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id,  @RequestParam("bezeichnung") String bezeichnung, @RequestParam("zutatenkategorie") String zutatenkategorie) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) {
 			return ResponseEntity.notFound().build();
 		}
 		else {
 			z.setBezeichnung(bezeichnung);
-			z.setZutatenkategorie(kategorie);
+			z.setZutatenkategorie(zutatenkategorie);
 			zutatRepository.save(z);
 			return ResponseEntity.ok().body(z);
 		}
@@ -69,15 +69,19 @@ public class BestandController {
      * @return
      */
     @RequestMapping(path="/bestand/zutat/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> setZutatById(@RequestParam Long id,  @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand) {
+	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id,  @RequestParam("menge") Double mengeNew, @RequestParam("mindestbestand") Double mindestbestandNew) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) {
 			return ResponseEntity.notFound().build();
 		}
 		else {
 			Bestand b = z.getBestand();
-			b.setMenge(menge);
-			b.setMindestbestand(mindestbestand);
+			
+			Double mengeOld 			= b.getMenge();
+			Double mindestbestandOld 	= b.getMindestbestand();
+			
+			b.setMenge(mengeOld + mengeNew);
+			b.setMindestbestand(mindestbestandOld + mindestbestandNew);
 			bestandRepository.save(b);
 			return ResponseEntity.ok().body(z);
 		}
@@ -87,7 +91,7 @@ public class BestandController {
      * Zutat löschen
      * @return
      */
-    @RequestMapping(path="/bestand/zutat/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path="/zutat/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteZutat(@PathVariable("id") Long id) {
 		if (zutatRepository.exists(id)) {
 			zutatRepository.delete(id);
@@ -101,11 +105,11 @@ public class BestandController {
      * Neue Zutat hinzufügen
      * @return
      */
-    @RequestMapping(value = "/bestand/zutat/neu", method = RequestMethod.POST)
+    @RequestMapping(value = "/bestand/zutat/neu", method = RequestMethod.PUT)
     public ResponseEntity <?> persistZutat(
-    		@RequestParam("name") String name, @RequestParam("kategorie") String kategorie, @RequestParam("bestand") String bestand, @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand, @RequestParam("einheit") String einheit) 
+    		@RequestParam("bezeichnung") String bezeichnung, @RequestParam("kategorie") String kategorie, @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand, @RequestParam("einheit") String einheit) 
     {
-    	Zutat z = new Zutat(name, kategorie);
+    	Zutat z = new Zutat(bezeichnung, kategorie);
     	Bestand b = new BestandFactory().createBestand(z, menge, mindestbestand, einheit);
     	z.setBestand(b);
     	zutatRepository.save(z);
