@@ -1,10 +1,13 @@
 package de.lager.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Bestand {
@@ -14,10 +17,10 @@ public class Bestand {
     private double menge;
     private double mindestbestand;
     private Mengeneinheit mengeneinheit;
-   	@OneToOne(mappedBy="bestand")
+   	@OneToOne(mappedBy="bestand",fetch = FetchType.LAZY)
+   	@JsonIgnore
    	private Zutat zutat;
-    
-    
+    //test
     
     protected Bestand() {
     	
