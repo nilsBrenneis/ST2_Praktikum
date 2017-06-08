@@ -1,6 +1,9 @@
 package de.lager.entities;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +22,20 @@ public class Zutat {
     private Bestand bestand;
     private String zutatenkategorie;
     @Embedded
+    @AttributeOverrides({
+    	@AttributeOverride(name="januar", column=@Column(nullable=true)),
+    	@AttributeOverride(name="februar", column=@Column(nullable=true)),
+    	@AttributeOverride(name="maerz", column=@Column(nullable=true)),
+    	@AttributeOverride(name="april", column=@Column(nullable=true)),
+    	@AttributeOverride(name="mai", column=@Column(nullable=true)),
+    	@AttributeOverride(name="juni", column=@Column(nullable=true)),
+    	@AttributeOverride(name="juli", column=@Column(nullable=true)),
+    	@AttributeOverride(name="august", column=@Column(nullable=true)),
+    	@AttributeOverride(name="september", column=@Column(nullable=true)),
+    	@AttributeOverride(name="oktober", column=@Column(nullable=true)),
+    	@AttributeOverride(name="november", column=@Column(nullable=true)),
+    	@AttributeOverride(name="dezember", column=@Column(nullable=true)),
+    })
     private Saisonverfuegbarkeit saisonverfuegbarkeit;
     
     protected Zutat() {

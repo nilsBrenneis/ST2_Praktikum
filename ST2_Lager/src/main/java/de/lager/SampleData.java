@@ -66,7 +66,7 @@ public class SampleData implements ApplicationListener<ContextRefreshedEvent> {
     	
     	Saisonverfuegbarkeit ganzesjahr = new Saisonverfuegbarkeit(true,true,true,true,true,true,true,true,true,true,true,true);
     	
-    	Zutat kartoffeln = new Zutat("Kartoffeln", "Nachtschattengewaechse",ganzesjahr);
+    	Zutat kartoffeln = new Zutat("Kartoffeln", "Nachtschattengewaechse");
     	Bestand kartoffelBestand = new BestandFactory().createBestand(kartoffeln, 1, 2, "kg");
     	kartoffeln.setBestand(kartoffelBestand);
     	
