@@ -1,6 +1,7 @@
 package de.lager.services;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class BestandController {
      * Liste des kompletten Besetands
      * @return
      */
-    @RequestMapping(path = "/bestand", method = RequestMethod.GET)
+    @RequestMapping(path = "/bestaende", method = RequestMethod.GET)
     public List<Zutat> getAllZutaten() {
 		return (List<Zutat>) zutatRepository.findAll();
     }
@@ -39,7 +40,7 @@ public class BestandController {
      * Bestand einzelner Zutat einsehen
      * @return
      */
-    @RequestMapping(path="/bestand/zutat/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/bestaende/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getZutatById(@PathVariable("id") Long id ) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) return ResponseEntity.notFound().build();
@@ -50,8 +51,9 @@ public class BestandController {
      * Zutat ändern
      * @return
      */
-    @RequestMapping(path="/zutat/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id,  @RequestParam("bezeichnung") String bezeichnung, @RequestParam("zutatenkategorie") String zutatenkategorie) {
+    @RequestMapping(path="/zutaten/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id, 
+			@RequestParam("bezeichnung") String bezeichnung, @RequestParam("zutatenkategorie") String zutatenkategorie) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) {
 			return ResponseEntity.notFound().build();
@@ -68,8 +70,9 @@ public class BestandController {
      * Bestand einzelner Zutat ändern
      * @return
      */
-    @RequestMapping(path="/bestand/zutat/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id,  @RequestParam("menge") Double mengeNew, @RequestParam("mindestbestand") Double mindestbestandNew) {
+    @RequestMapping(path="/bestaende/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> setZutatById(@PathVariable("id") Long id, 
+			@RequestParam("menge") Double mengeNew, @RequestParam("mindestbestand") Double mindestbestandNew) {
 		Zutat z = zutatRepository.findOne(id);
 		if (z == null) {
 			return ResponseEntity.notFound().build();
@@ -91,7 +94,7 @@ public class BestandController {
      * Zutat löschen
      * @return
      */
-    @RequestMapping(path="/zutat/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path="/zutaten/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteZutat(@PathVariable("id") Long id) {
 		if (zutatRepository.exists(id)) {
 			zutatRepository.delete(id);
@@ -105,9 +108,11 @@ public class BestandController {
      * Neue Zutat hinzufügen
      * @return
      */
-    @RequestMapping(value = "/bestand/zutat/neu", method = RequestMethod.PUT)
+    @RequestMapping(value = "/bestaende", method = RequestMethod.PUT)
     public ResponseEntity <?> persistZutat(
-    		@RequestParam("bezeichnung") String bezeichnung, @RequestParam("kategorie") String kategorie, @RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand, @RequestParam("einheit") String einheit) 
+    		@RequestParam("bezeichnung") String bezeichnung, @RequestParam("kategorie") String kategorie,
+    		@RequestParam("menge") Double menge, @RequestParam("mindestbestand") Double mindestbestand,
+    		@RequestParam("einheit") String einheit) 
     {
     	Zutat z = new Zutat(bezeichnung, kategorie);
     	Bestand b = new BestandFactory().createBestand(z, menge, mindestbestand, einheit);
@@ -118,5 +123,26 @@ public class BestandController {
     					.path("/{id}").buildAndExpand( z.getId() ).toUri();
 		return ResponseEntity.created( location ).body( z );
     }
+    
+    
+    /**
+     * Zutaten mit kritischem Bestand zurückgeben
+     * @return
+     */
+    @RequestMapping(path="/kritBestaende", method = RequestMethod.GET)
+	public ResponseEntity<?> getKritBetaende() {
+		Iterable<Zutat> zutatIterable = zutatRepository.findAll();
+		List<Zutat> zutatListe = new ArrayList<Zutat>();
+		
+		for (Zutat zutat : zutatIterable) {
+			Bestand b = zutat.getBestand();
+			if (b.getMenge() < b.getMindestbestand()) {
+				zutatListe.add(zutatRepository.findOne(b.getId()));
+			}
+		}
+		
+		if (zutatListe.isEmpty()) return ResponseEntity.notFound().build();
+		else return ResponseEntity.ok().body(zutatListe);
+	}
     
 }
