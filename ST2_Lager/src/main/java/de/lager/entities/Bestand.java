@@ -1,10 +1,16 @@
 package de.lager.entities;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +27,12 @@ public class Bestand {
    	@JsonIgnore
    	private Zutat zutat;
     //test
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    private Set<Bestandsaenderung> bestandsaenderungen = new HashSet<Bestandsaenderung>();
+    
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    private Set<Mindestbestandsaenderung> mindestbestandsaenderungen = new HashSet<Mindestbestandsaenderung>();
+    
     
     protected Bestand() {
     	
@@ -76,5 +88,29 @@ public class Bestand {
 	public void setZutat(Zutat zutat){
 		this.zutat=zutat;
 	}
+	
+	public void addBestandsaenderung(Bestandsaenderung b){
+		if(!bestandsaenderungen.contains(b)){
+			bestandsaenderungen.add(b);
+			b.setBestand(this);
+		}
+	}
+	
+	public Set<Bestandsaenderung> getBestandsaenderungen(){
+		return Collections.unmodifiableSet(bestandsaenderungen);
+	}
+	
+	public void addMindestbestandsaenderung(Mindestbestandsaenderung b){
+		if(!mindestbestandsaenderungen.contains(b)){
+			mindestbestandsaenderungen.add(b);
+			b.setBestand(this);
+		}
+	}
+	
+	public Set<Mindestbestandsaenderung> getMindestbestandsaenderungen(){
+		return Collections.unmodifiableSet(mindestbestandsaenderungen);
+	}
+	
+	
 }
 

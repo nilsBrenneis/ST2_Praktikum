@@ -18,8 +18,8 @@ public class BestandFactory {
 		Bestand bestand = new Bestand(menge, mindestbestand,mengeneinheit,zutat);
 		Bestandsaenderung bestandsaenderung = new Bestandsaenderung(new Date(), menge,bestand);
 		Mindestbestandsaenderung mindestbestandsaenderung = new Mindestbestandsaenderung(new Date(), mindestbestand,bestand);
-		
-		
+		bestand.addBestandsaenderung(bestandsaenderung);
+		bestand.addMindestbestandsaenderung(mindestbestandsaenderung);
 		return bestand;
 	}
 	
