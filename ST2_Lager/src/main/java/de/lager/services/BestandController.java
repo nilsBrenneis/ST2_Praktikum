@@ -28,7 +28,7 @@ public class BestandController {
     private BestandRepository bestandRepository;
     
     /**
-     * Liste des kompletten Besetands
+     * Liste des kompletten Bestands
      * @return
      */
     @RequestMapping(path = "/bestaende", method = RequestMethod.GET)
